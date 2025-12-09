@@ -1,0 +1,11 @@
+name: ive-pymdp
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.8
+  - numpy
+  - pip
+  - pip:
+    - inferactively-pymdp
+
