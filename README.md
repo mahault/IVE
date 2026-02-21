@@ -20,13 +20,14 @@ data/
   gaesser/           # Gaesser et al. (2019) fMRI prosocial task (OpenNeuro ds001439)
   zhao2024/          # Zhao et al. (2024) fMRI IVE (Phase 3, manual download)
 tests/
-  test_agent.py      # Unit tests (18 tests: Phase 1 + Phase 2)
+  test_agent.py      # Unit tests (21 tests: Phase 1 + Phase 2 + Gaesser validation)
 notebooks/
   01_disentangled_ive_demo.ipynb    # Parameter sweeps + interaction effects
   02_moche_data_fitting.ipynb       # Empirical data + model fitting + cross-validation
   03_effect_sizes_summary.ipynb     # Forest plot + bootstrap CIs + summary table
   04_neural_mapping.ipynb           # Factorized model + precision modulation
   05_case_simulations.ipynb         # Case studies + lesion + interventions
+  06_gaesser_validation.ipynb       # Gaesser et al. (2019) empirical validation
 ```
 
 ## IVE Mechanisms
@@ -120,6 +121,30 @@ This dissociation is consistent with the model: `delta_C` shifts the *preference
 - High empathy (enhanced coupling): amplified IVE
 
 **Institutional interventions:** Re-identification (patient stories, named case reviews) partially reverses the effects of aggregation.
+
+### Phase 2b: Empirical Validation — Gaesser et al. (2019)
+
+The factorized model was fitted to Gaesser et al. (2019) *Social Cognitive and Affective Neuroscience* — an fMRI study (N=18) + TMS study (N=19) on episodic simulation and prosocial helping.
+
+**Best-fit parameters** (grid search on Experiment 1 WillingnessToHelp):
+
+| Parameter | Value | Interpretation |
+|-----------|-------|----------------|
+| `identity_affect_coupling` | 0.65 | TPJ-Insula connectivity strength |
+| `cost_penalty` | 0.9 | Low cost task (rating, not donating) |
+| `util_saved` | 1.4 | Moderate valuation of helping |
+| `affect_preference_boost` | 0.4 | Moderate empathic motivation |
+
+**Model fit:**
+
+| Metric | Empirical | Model | Residual |
+|--------|-----------|-------|----------|
+| P(Help \| Control) | 0.588 | ~0.59 | <0.01 |
+| P(Help \| Episodic) | 0.745 | ~0.75 | <0.01 |
+| IVE magnitude | +0.157 | ~+0.15 | <0.01 |
+| TMS to rTPJ | d=0.22, ns | Weak effect (consistent) | - |
+
+**Cross-study consistency:** The same model architecture fits both Moche (donation, cost_penalty=1.9) and Gaesser (willingness-to-help, cost_penalty=0.9) data. The higher cost in Moche explains why the IVE manifests in *affect* but not *behaviour*, while in Gaesser it manifests in *stated intentions*.
 
 ## Setup
 

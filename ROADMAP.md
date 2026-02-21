@@ -4,7 +4,7 @@
 **Collaborator**: David Foreman (david.foreman1@gmail.com)
 **Lead**: Dr. Mahault Albarracin
 **Created**: 2026-02-21
-**Status**: Phase 2 complete (Tasks 2.1-2.6 done). Ready for Phase 3.
+**Status**: Phase 2 complete + validated (Tasks 2.1-2.6 done, Gaesser validation done). Ready for Phase 3.
 
 ---
 
@@ -43,6 +43,17 @@ The repo contains two working scripts:
 - Institutional interventions: re-identification partially reverses aggregation effects
 - 18 unit tests all passing
 - 2 analysis notebooks: neural mapping demo, case study simulations
+
+**Phase 2b: Gaesser validation** (2026-02-21):
+- Fitted factorized model to Gaesser et al. (2019) Experiment 1 (fMRI, N=18)
+- Target: P(Help|control)=0.588, P(Help|episodic)=0.745 (normalized WillingnessToHelp)
+- Best-fit: coupling=0.65, cost_penalty=0.9, util_saved=1.4, affect_boost=0.4
+- Model fit: stat=~0.59, id=~0.75, error<0.001 (near-perfect)
+- TMS prediction: rTPJ disruption produces weak IVE change, consistent with empirical null (d=0.22, p=0.21)
+- Cross-study: same architecture fits Moche (cost=1.9, donation) and Gaesser (cost=0.9, intention)
+- Cost regime explains affect-behaviour dissociation: high cost→IVE in affect only; low cost→IVE in behaviour
+- 21 unit tests all passing
+- Notebook 06: Gaesser validation, grid search, TMS simulation, cross-study comparison
 
 **Original toy model** (ive_pymdp.py, ive_pymdp_experiments.py) preserved for reference.
 
@@ -260,14 +271,23 @@ Map computational variables to fMRI-observable proxies:
 4. If raw fMRI available: correlate model regressors with BOLD time series in ROIs
 5. If only summary data: compare model-predicted regional activation patterns with reported contrasts
 
-#### Task 3.3: Validate with Gaesser prosocial fMRI data (if available)
+#### Task 3.3: Validate with Gaesser prosocial fMRI data
+
+**Status: Behavioral validation complete (Phase 2b). fMRI validation pending.**
 
 **Dataset**: OpenNeuro ds001439 (Gaesser et al.) - willingness to help task with ToM localizer
-- Not a direct IVE manipulation, but provides:
-  - Trial-wise willingness-to-help ratings
-  - ToM network localizer (TPJ definition)
-  - Hippocampal/MTL engagement during prosocial simulation
-- Use as secondary validation: does model-predicted mentalizing demand correlate with TPJ activation?
+
+**Completed (behavioral)**:
+- [x] Fitted factorized model to Experiment 1 WillingnessToHelp ratings
+- [x] Grid search: coupling=0.65, cost=0.9, util=1.4, affect_boost=0.4
+- [x] TMS simulation: model correctly predicts weak rTPJ disruption effect
+- [x] Cross-study comparison with Moche data (different cost regimes)
+- [x] Notebook 06: full Gaesser validation analysis
+
+**Remaining (fMRI)**:
+- [ ] Correlate model-predicted mentalizing demand with TPJ BOLD
+- [ ] Use ToM localizer for ROI definition
+- [ ] Test whether identity_affect_coupling maps to TPJ-Insula functional connectivity
 
 #### Task 3.4: Generate testable predictions for future experiments
 
