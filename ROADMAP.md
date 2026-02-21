@@ -4,7 +4,7 @@
 **Collaborator**: David Foreman (david.foreman1@gmail.com)
 **Lead**: Dr. Mahault Albarracin
 **Created**: 2026-02-21
-**Status**: Phase 1 complete (Tasks 1.1-1.5 done). Ready for Phase 2.
+**Status**: Phase 2 complete (Tasks 2.1-2.6 done). Ready for Phase 3.
 
 ---
 
@@ -32,6 +32,17 @@ The repo contains two working scripts:
 - Data loaders for all 6 studies (Studies 1, 2a, 2b, 3, 4, 5)
 - 3 analysis notebooks: model demo, Moche data fitting, effect size summary
 - 11 unit tests all passing
+
+**Phase 2 results** (2026-02-21):
+- Factorized 4-factor generative model: identity (TPJ), affect (Insula), distance (mPFC), outcome (Striatum)
+- 5 observation modalities including separate cost channel
+- IVE emerges from identity->affect precision modulation (TPJ-Insula coupling)
+- Aggregation operator: bureaucratic, statistical, and military types
+- Case study simulations: Francis Inquiry, RADAR trial, military abstraction, charity
+- Individual difference profiles: psychopathy (reduced coupling), burnout (reduced precision)
+- Institutional interventions: re-identification partially reverses aggregation effects
+- 18 unit tests all passing
+- 2 analysis notebooks: neural mapping demo, case study simulations
 
 **Original toy model** (ive_pymdp.py, ive_pymdp_experiments.py) preserved for reference.
 
@@ -208,12 +219,11 @@ For each case:
 
 #### Task 2.6: Generate Phase 2 deliverables
 
-- [ ] `src/ive/networks.py`: network-mapped parameterization with factor graph
-- [ ] `src/ive/envs/aggregation_env.py`: aggregation environments
-- [ ] `src/ive/envs/francis.py`, `radar.py`, `military.py`, `charity.py`: case studies
-- [ ] `notebooks/04_neural_mapping.ipynb`: show factor structure + precision modulation
-- [ ] `notebooks/05_case_simulations.ipynb`: reproduce all 4 case studies
-- [ ] `notebooks/06_lesion_studies.ipynb`: psychopathy, burnout, institutional design
+- [x] `src/ive/networks.py`: network-mapped parameterization with factor graph
+- [x] Aggregation operator in `networks.py`: bureaucratic, statistical, military
+- [x] Case study presets in `networks.py`: Francis, RADAR, military, charity, psychopathy, burnout
+- [x] `notebooks/04_neural_mapping.ipynb`: factor structure + precision modulation
+- [x] `notebooks/05_case_simulations.ipynb`: all 4 case studies + lesion + interventions
 - [ ] Write-up section: "Neural mapping and institutional moral failure simulations"
 
 ---

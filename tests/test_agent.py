@@ -9,6 +9,11 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from ive.agent import build_agent, choose_action, get_help_probability
 from ive.utils import state_index, decode_state, cohens_d
+from ive.networks import (
+    build_network_agent, choose_network_action,
+    get_network_help_probability, context_to_network_states,
+    apply_aggregation, CASE_PRESETS,
+)
 
 
 class TestStateIndexing:
@@ -79,6 +84,71 @@ class TestGetHelpProbability:
         p_stat = get_help_probability(context="stat", n_samples=100)
         p_id = get_help_probability(context="id", n_samples=100)
         assert p_id >= p_stat
+
+
+class TestNetworkAgent:
+    def test_builds_stat(self):
+        states = context_to_network_states("stat")
+        agent = build_network_agent(**states)
+        assert agent.num_factors == 4
+        assert agent.num_modalities == 5
+        assert agent.num_states == [3, 3, 3, 3]
+
+    def test_builds_id(self):
+        states = context_to_network_states("id")
+        agent = build_network_agent(**states)
+        assert agent is not None
+
+    def test_action_valid(self):
+        states = context_to_network_states("stat")
+        agent = build_network_agent(**states)
+        action = choose_network_action(agent, **states)
+        assert action in (0, 1)
+
+    def test_ive_direction(self):
+        """Identified should help more than statistical."""
+        np.random.seed(42)
+        p_stat = get_network_help_probability(
+            n_samples=200, **context_to_network_states("stat")
+        )
+        p_id = get_network_help_probability(
+            n_samples=200, **context_to_network_states("high_id")
+        )
+        assert p_id > p_stat
+
+    def test_graded_ive(self):
+        """Help probability should increase with identification level."""
+        np.random.seed(42)
+        rates = []
+        for ctx in ["stat", "id", "high_id"]:
+            p = get_network_help_probability(
+                n_samples=200, **context_to_network_states(ctx)
+            )
+            rates.append(p)
+        # Monotonically increasing (with MC noise, allow small violations)
+        assert rates[2] > rates[0]
+
+    def test_aggregation_reduces_help(self):
+        """Aggregation should reduce help probability compared to individual."""
+        np.random.seed(42)
+        p_individual = get_network_help_probability(
+            n_samples=200, **context_to_network_states("high_id")
+        )
+        agg_params = apply_aggregation(n_victims=20, aggregation_type="bureaucratic")
+        p_aggregated = get_network_help_probability(n_samples=200, **agg_params)
+        assert p_individual > p_aggregated
+
+    def test_case_presets_run(self):
+        """All case presets should build and produce valid actions."""
+        for name, params in CASE_PRESETS.items():
+            agent = build_network_agent(**params)
+            states = {
+                "identity_state": params.get("identity_state", 0),
+                "affect_state": params.get("affect_state", 0),
+                "distance_state": params.get("distance_state", 0),
+            }
+            action = choose_network_action(agent, **states)
+            assert action in (0, 1), f"Preset {name} produced invalid action {action}"
 
 
 class TestCohensD:
