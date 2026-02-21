@@ -22,7 +22,10 @@ data/
   zhao2024/          # Zhao et al. (2024) fMRI IVE (Phase 3, manual download)
 tests/
   test_agent.py      # Unit tests (11 tests)
-notebooks/           # Analysis notebooks
+notebooks/
+  01_disentangled_ive_demo.ipynb    # Parameter sweeps + interaction effects
+  02_moche_data_fitting.ipynb       # Empirical data + model fitting + cross-validation
+  03_effect_sizes_summary.ipynb     # Forest plot + bootstrap CIs + summary table
 ```
 
 ## IVE Mechanisms
@@ -35,13 +38,19 @@ The model decomposes the IVE into three separable parameters:
 | `delta_gamma` | Precision shift: more urgent policy selection | Striatum / dACC (gain) |
 | `delta_p` | Controllability shift: higher perceived efficacy | Agency / mPFC |
 
-## Current Results
+## Current Results (Phase 1 complete)
 
 Fitted to Moche et al. (2024) Study 2b:
 - P(Help\|statistical) = 0.297, P(Help\|identified) = 0.390
 - Cohen's h = 0.197 (within empirical IVE range)
 - Primary driver: `delta_C = 0.9` (affective valuation shift)
 - Key finding: IVE manifests as affect shift (sympathy d=0.155, distress d=0.471), not donation shift (d=-0.102)
+
+Cross-validated across Studies 1-5:
+- Model correctly predicts weak/variable donation IVE across studies
+- Ablation: delta_C alone accounts for >90% of the IVE
+- Study 3 (mental imagery): graded delta_C reproduces graded identification manipulation
+- Study 4 shows reversed donation IVE, consistent with model's cost-regime sensitivity
 
 ## Setup
 
@@ -60,6 +69,6 @@ pytest tests/ -v
 ## Roadmap
 
 See [ROADMAP.md](ROADMAP.md) for the three-phase plan:
-1. Behavioural model + calibration (current)
-2. Neural network mapping + case studies
+1. Behavioural model + calibration (complete)
+2. Neural network mapping + case studies (next)
 3. Neuroimaging validation + AI alignment

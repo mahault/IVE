@@ -95,6 +95,77 @@ def load_study3():
     return df[cols].dropna(subset=["identifiability", "donation"])
 
 
+def load_study2a():
+    """Study 2a: 3-level identifiability x 2-level UA (no affect), N=1209.
+
+    Returns filtered DataFrame with columns:
+        identifiability: 'non_id', 'id', or 'high_id'
+        unit_asking: 'control' or 'ua'
+        donation: float (SEK)
+    """
+    df, _ = _load_sav("Data_set_study_2a.sav")
+    df = df[df["Filter_DV_3SD"] == 0.0].copy()
+
+    df["identifiability"] = df["Identifiability"].map(
+        {1.0: "non_id", 2.0: "id", 3.0: "high_id"}
+    )
+    df["unit_asking"] = df["Control_vs_UA"].map({1.0: "control", 2.0: "ua"})
+    df["donation"] = df["DV_20Children"]
+
+    return df[["identifiability", "unit_asking", "donation"]].dropna()
+
+
+def load_study4():
+    """Study 4: 2x2x2 (Identifiability x UA x Emotion order), N=1632.
+
+    Returns DataFrame with columns:
+        identifiability: 'non_id' or 'id'
+        unit_asking: 'control' or 'ua'
+        emotion_order: category from Emotion_asking
+        donation: float (SEK, winsorized)
+        donation_raw: float (SEK, unwinsorized)
+        sympathy: float (0-6)
+        distress: float (0-6)
+    """
+    df, _ = _load_sav("Dataset_study_4_UA_identifiability_order.sav")
+
+    df["identifiability"] = df["Identifiability"].map({1.0: "non_id", 2.0: "id"})
+    df["unit_asking"] = df["Control_UA"].map({1.0: "control", 2.0: "ua"})
+    df["emotion_order"] = df["Emotion_asking"]
+    df["donation"] = df["DV20children_winsorized"]
+    df["donation_raw"] = df["DV20children_unwinsorized"]
+    df["sympathy"] = df["Sympathy"]
+    df["distress"] = df["Personal_Distress"]
+
+    cols = ["identifiability", "unit_asking", "emotion_order",
+            "donation", "donation_raw", "sympathy", "distress"]
+    return df[cols].dropna(subset=["identifiability", "donation"])
+
+
+def load_study5():
+    """Study 5: Singularity effect, 2x2x2 (UA x Start x Group size), N=2000.
+
+    Note: This study tests the singularity effect (group size), not
+    identifiability per se. Included for completeness.
+
+    Returns filtered DataFrame with columns:
+        manipulation: 'control' or 'ua'
+        start_size: float (1 or 5)
+        group_size: float (20 or 200)
+        donation: float (SEK)
+    """
+    df, _ = _load_sav("Data_set_study_5_UA_singularity.sav")
+    # Filter_3SD: 0=within 3SD (keep), 1=outlier (drop)
+    df = df[df["Filter_3SD"] == 0.0].copy()
+
+    df["manipulation"] = df["Manipulation_group"].map({1.0: "control", 2.0: "ua"})
+    df["start_size"] = df["Start_size"]
+    df["group_size"] = df["Group_size"]
+    df["donation"] = df["DV"]
+
+    return df[["manipulation", "start_size", "group_size", "donation"]].dropna()
+
+
 def get_calibration_targets():
     """Extract key calibration targets from the data.
 
