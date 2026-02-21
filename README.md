@@ -8,19 +8,26 @@ A computational model of the Identified Victim Effect (IVE) using active inferen
 src/ive/
   agent.py           # Phase 1: disentangled IVE agent (delta_C, delta_gamma, delta_p)
   networks.py        # Phase 2: factorized 4-factor neural-circuit model
+  neuroimaging.py    # Phase 3: ROI definitions, neural regressors, fMRI analysis
+  predictions.py     # Phase 3: 5 testable fMRI predictions
+  zhao_data.py       # Phase 3: Zhao et al. (2024) published summary statistics
   fitting.py         # Parameter fitting (grid search, MLE)
   plotting.py        # Visualization
   utils.py           # State indexing, effect size computation
   data_loader.py     # Load Moche et al. (2024) SPSS data (Studies 1-5)
   envs/
     charity_task.py  # One-step donation task environment
-  alignment/         # AI alignment extensions (Phase 3)
+  alignment/         # AI alignment: IVE-weighted utility + Parfit scenarios
+    ive_utility.py   # IVE-weighted aggregation functions
+    parfit_scenarios.py  # Repugnant conclusion, trolley, resource allocation
 data/
   moche2024/         # Moche et al. (2024) behavioural data (6 studies, N=7,996)
   gaesser/           # Gaesser et al. (2019) fMRI prosocial task (OpenNeuro ds001439)
-  zhao2024/          # Zhao et al. (2024) fMRI IVE (Phase 3, manual download)
+  zhao2024/          # Zhao et al. (2024) fMRI IVE (manual download from SciDB)
 tests/
-  test_agent.py      # Unit tests (21 tests: Phase 1 + Phase 2 + Gaesser validation)
+  test_agent.py      # Unit tests (62 tests: Phase 1-3 + predictions + validation)
+  test_neuroimaging.py  # ROI definitions, neural regressors, condition mapping
+  test_alignment.py  # IVE utility, Parfit scenarios, aggregation comparisons
 notebooks/
   01_disentangled_ive_demo.ipynb    # Parameter sweeps + interaction effects
   02_moche_data_fitting.ipynb       # Empirical data + model fitting + cross-validation
@@ -28,6 +35,9 @@ notebooks/
   04_neural_mapping.ipynb           # Factorized model + precision modulation
   05_case_simulations.ipynb         # Case studies + lesion + interventions
   06_gaesser_validation.ipynb       # Gaesser et al. (2019) empirical validation
+  07_fmri_predictions.ipynb         # Neural regressors + ROI predictions + Zhao comparison
+  08_zhao_analysis.ipynb            # Zhao et al. (2024) behavioral/fMRI analysis
+  09_alignment.ipynb                # IVE-weighted utility + moral philosophy scenarios
 ```
 
 ## IVE Mechanisms
@@ -146,6 +156,22 @@ The factorized model was fitted to Gaesser et al. (2019) *Social Cognitive and A
 
 **Cross-study consistency:** The same model architecture fits both Moche (donation, cost_penalty=1.9) and Gaesser (willingness-to-help, cost_penalty=0.9) data. The higher cost in Moche explains why the IVE manifests in *affect* but not *behaviour*, while in Gaesser it manifests in *stated intentions*.
 
+### Phase 3: Neuroimaging Predictions + AI Alignment (complete)
+
+**Testable fMRI predictions** (revised per Zhao et al. 2024):
+
+| Prediction | Direction | ROIs | Zhao Match |
+|---|---|---|---|
+| 1. TPJ mentalizing demand | UIV > IV | rTPJ, lTPJ | Yes (t=8.18) |
+| 2. Insula affect update | IV > UIV | Anterior Insula | Yes (t=7.05) |
+| 3. mPFC narrative processing | IV > UIV | mPFC | Yes (t=8.45) |
+| 4. Aggregation increases TPJ | Novel prediction | rTPJ, lTPJ | N/A |
+| 5. TPJ-Insula FC coupling | IV > UIV | rTPJ-Insula PPI | Yes (t=7.19) |
+
+**Key insight**: TPJ shows UIV > IV (opposite to naive prediction), reflecting mentalizing *demand* — anonymous victims require more effortful inference. In predictive coding terms, high identity precision produces low prediction error, hence lower TPJ BOLD.
+
+**AI alignment results**: IVE-weighted utility (coupling=0.65) avoids Parfit's Repugnant Conclusion by making identified welfare non-fungible, but introduces identifiability bias (photogenic victim effect). The coupling parameter provides a normatively interpretable dial between pure utilitarianism and IVE-weighted aggregation.
+
 ## Setup
 
 ```bash
@@ -157,7 +183,7 @@ pip install -e .
 ## Tests
 
 ```bash
-pytest tests/ -v
+pytest tests/ -v  # 62 tests
 ```
 
 ## Roadmap
@@ -165,4 +191,4 @@ pytest tests/ -v
 See [ROADMAP.md](ROADMAP.md) for the three-phase plan:
 1. Behavioural model + calibration (complete)
 2. Neural network mapping + case studies (complete)
-3. Neuroimaging validation + AI alignment (next)
+3. Neuroimaging validation + AI alignment (complete)

@@ -16,4 +16,7 @@ dependencies:
     - inferactively-pymdp
     - emcee
     - arviz
+    - nibabel
+    - nilearn
+    - openpyxl
 

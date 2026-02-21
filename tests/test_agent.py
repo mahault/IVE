@@ -192,6 +192,32 @@ class TestGaesserValidation:
         assert p_id > p_stat
 
 
+class TestPredictions:
+    """Tests for fMRI predictions module."""
+
+    def test_all_predictions_correct_direction(self):
+        """All 5 predictions should produce correct directions."""
+        from ive.predictions import generate_all_predictions
+        results = generate_all_predictions()
+        for _, row in results.iterrows():
+            assert row["direction_correct"], (
+                f"Prediction '{row['prediction']}' has wrong direction"
+            )
+
+    def test_predictions_table(self):
+        from ive.predictions import predictions_to_table
+        table = predictions_to_table()
+        assert len(table) == 5
+        assert "title" in table.columns
+        assert "direction" in table.columns
+
+    def test_zhao_comparison(self):
+        from ive.predictions import compare_predictions_to_zhao
+        df = compare_predictions_to_zhao()
+        assert len(df) == 5
+        assert all(df["model_correct_direction"])
+
+
 class TestCohensD:
     def test_zero_difference(self):
         a = np.array([1.0, 2.0, 3.0])

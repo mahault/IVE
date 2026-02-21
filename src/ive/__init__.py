@@ -6,4 +6,4 @@ Phase 2: Neural-network-mapped factorized generative model
 Phase 3: Neuroimaging prediction + AI alignment
 """
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"

@@ -12,4 +12,7 @@ setup(
         "matplotlib",
         "inferactively-pymdp",
     ],
+    extras_require={
+        "neuro": ["nibabel", "nilearn"],
+    },
 )
